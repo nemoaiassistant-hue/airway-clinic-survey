@@ -362,7 +362,7 @@
       submitError.style.display = 'none';
 
       try {
-        const contactRes = await fetch('https://airway-clinic-proxy.airwayclinicproxy.workers.dev/', {
+        const contactRes = await fetch('https://airway-clinic-survey.netlify.app/.netlify/functions/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
