@@ -362,13 +362,6 @@
       submitError.style.display = 'none';
 
       try {
-        // Collect symptoms (worker handles GHL API call + note creation)
-        const symptoms = [];
-        checkboxes.forEach(cb => {
-          if (cb.checked) {
-            symptoms.push(cb.parentElement.querySelector('.txt').textContent);
-          }
-        });
         const contactRes = await fetch('https://airway-clinic-proxy.airwayclinicproxy.workers.dev/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
