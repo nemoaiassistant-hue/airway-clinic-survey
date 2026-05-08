@@ -389,7 +389,7 @@
         console.error('Submission error:', err);
         submitBtn.disabled = false;
         submitBtn.textContent = 'Skicka checklista';
-        submitError.textContent = 'Något gick fel. Försök igen eller kontakta oss direkt.';
+        submitError.textContent = 'Något gick fel: ' + (err.message || 'Okänt fel');
         submitError.style.display = 'block';
       }
     });
