@@ -174,6 +174,13 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+    .submit-error {
+      display: none;
+      text-align: center;
+      margin-top: 12px;
+      color: var(--error);
+      font-size: 14px;
+    }
 
     /* Counter */
     .counter {
@@ -268,7 +275,8 @@
       <div class="counter">Du har markerat <strong id="count">0</strong> av 14 symtom</div>
 
       <div class="submit-section">
-        <button type="submit" class="submit-btn">Skicka checklista</button>
+        <button type="submit" class="submit-btn" id="submitBtn">Skicka checklista</button>
+        <div class="submit-error" id="submitError">Något gick fel. Försök igen.</div>
       </div>
     </form>
 
@@ -306,6 +314,8 @@
     // Form submission
     const form = document.getElementById('survey-form');
     const requiredFields = form.querySelectorAll('input[required]');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitError = document.getElementById('submitError');
 
     function validateField(input) {
       const errMsg = input.parentElement.querySelector('.error-msg');
@@ -324,42 +334,92 @@
       f.addEventListener('blur', () => validateField(f));
     });
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       let valid = true;
       requiredFields.forEach(f => {
         if (!validateField(f)) valid = false;
       });
-
       if (!valid) return;
 
-      // Collect data
-      const data = {
-        firstName: document.getElementById('fname').value,
-        lastName: document.getElementById('lname').value,
-        email: document.getElementById('email').value,
-        phone: document.getElementById('phone').value,
-        symptoms: []
-      };
-
+      // Collect symptoms
+      const symptoms = [];
       checkboxes.forEach(cb => {
         if (cb.checked) {
-          data.symptoms.push(cb.parentElement.querySelector('.txt').textContent);
+          symptoms.push(cb.parentElement.querySelector('.txt').textContent);
         }
       });
 
-      // Store locally (replace with real backend later)
-      console.log('Survey submission:', data);
+      const firstName = document.getElementById('fname').value.trim();
+      const lastName = document.getElementById('lname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
 
-      // For now, store in localStorage as a simple demo
-      const submissions = JSON.parse(localStorage.getItem('airway_submissions') || '[]');
-      submissions.push({ ...data, timestamp: new Date().toISOString() });
-      localStorage.setItem('airway_submissions', JSON.stringify(submissions));
+      // Loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Skickar...';
+      submitError.style.display = 'none';
 
-      // Show success
-      form.style.display = 'none';
-      document.getElementById('success').style.display = 'block';
+      try {
+        // Build note with all checked symptoms
+        const symptomCount = symptoms.length;
+        const noteLines = symptoms.map((s, i) => `${i + 1}. ${s}`).join('\n');
+        const note = `Symtomchecklista – Tungband vuxna\nMarkerade ${symptomCount} av 14 symtom:\n\n${noteLines || 'Inga symtom markerade.'}`;
+
+        // Create/update contact in GHL
+        const contactRes = await fetch('https://services.leadconnectorhq.com/contacts/', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer pit-42523988-2ae9-454f-aa79-f042a080548f',
+            'Content-Type': 'application/json',
+            'Version': '2021-07-28'
+          },
+          body: JSON.stringify({
+            locationId: 'Z9UtrrCvJc8ObhTIILLF',
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone || undefined,
+            tags: ['symptom-checklist', 'tungband-vuxna', 'webform'],
+            source: 'web - symptom-checklist'
+          })
+        });
+
+        if (!contactRes.ok) {
+          const errData = await contactRes.json();
+          throw new Error(errData.message || 'Kunde inte skapa kontakt');
+        }
+
+        const contactData = await contactRes.json();
+        const contactId = contactData.contact?.id;
+
+        // Add symptoms as a note on the contact
+        if (contactId && symptomCount > 0) {
+          await fetch(`https://services.leadconnectorhq.com/contacts/${contactId}/notes`, {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer pit-42523988-2ae9-454f-aa79-f042a080548f',
+              'Content-Type': 'application/json',
+              'Version': '2021-07-28'
+            },
+            body: JSON.stringify({
+              body: note
+            })
+          });
+        }
+
+        // Show success
+        form.style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+
+      } catch (err) {
+        console.error('Submission error:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Skicka checklista';
+        submitError.textContent = 'Något gick fel. Försök igen eller kontakta oss direkt.';
+        submitError.style.display = 'block';
+      }
     });
   </script>
 </body>
