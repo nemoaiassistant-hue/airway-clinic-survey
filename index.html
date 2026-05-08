@@ -49,33 +49,11 @@
       margin-bottom: 14px;
     }
 
-    .logo {
-      width: 54px; height: 54px;
-      border: 3px solid var(--gold);
-      border-radius: 50%;
-      position: relative;
-      flex: 0 0 54px;
-    }
-    .logo:before, .logo:after {
-      content: ""; position: absolute;
-      width: 8px; height: 8px;
-      border-top: 3px solid var(--gold);
-      border-right: 3px solid var(--gold);
-      top: 13px; transform: rotate(135deg);
-    }
-    .logo:before { left: 12px; }
-    .logo:after { right: 12px; }
-    .mouth {
-      position: absolute; left: 16px; top: 27px;
-      width: 18px; height: 9px;
-      border: 3px solid var(--gold);
-      border-top: none;
-      border-radius: 0 0 10px 10px;
-    }
-    .tongue {
-      position: absolute; left: 24px; top: 35px;
-      width: 3px; height: 10px;
-      background: var(--gold);
+    .logo-img {
+      height: 60px;
+      width: auto;
+      object-fit: contain;
+      flex: 0 0 auto;
     }
 
     .brand {
@@ -239,10 +217,7 @@
 <body>
   <div class="sheet">
     <div class="top">
-      <div class="logo" aria-hidden="true">
-        <div class="mouth"></div>
-        <div class="tongue"></div>
-      </div>
+      <img class="logo-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/Z9UtrrCvJc8ObhTIILLF/media/697504ceeb392b3e880ee4d4.png" alt="Airway Clinic logotyp">
       <div class="brand">AIRWAY CLINIC</div>
     </div>
 
