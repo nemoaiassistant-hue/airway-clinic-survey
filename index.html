@@ -49,37 +49,37 @@
     .subtitle {
       color: var(--muted);
       font-size: 15px;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
     .form-group {
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
     .form-group-title {
       color: var(--ink);
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
     .lang-links {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
-      flex-wrap: wrap;
     }
     .lang-btn {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       text-decoration: none;
-      padding: 16px 28px;
+      padding: 10px 20px;
       border: 2px solid var(--box);
       border-radius: 8px;
       background: #fff;
       transition: all 0.2s;
-      min-width: 140px;
+      flex: 1;
+      justify-content: center;
+      min-width: 0;
     }
     .lang-btn:hover {
       border-color: var(--gold);
@@ -87,21 +87,26 @@
       transform: translateY(-2px);
     }
     .lang-btn .flag {
-      font-size: 32px;
+      font-size: 24px;
+      flex-shrink: 0;
     }
     .lang-btn .label {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--ink);
-    }
-    .lang-btn .desc {
-      font-size: 11px;
-      color: var(--muted);
     }
     .divider {
       border: none;
       border-top: 1px solid var(--box);
-      margin: 28px 0;
+      margin: 16px 0;
+    }
+    @media (max-width: 480px) {
+      .picker { padding: 24px 16px; }
+      h1 { font-size: 20px; }
+      .form-group-title { font-size: 13px; }
+      .lang-btn { padding: 8px 12px; }
+      .lang-btn .flag { font-size: 20px; }
+      .lang-btn .label { font-size: 13px; }
     }
   </style>
 </head>
@@ -118,17 +123,13 @@
         <a href="anamnes-sv.html" class="lang-btn">
           <span class="flag">🇸🇪</span>
           <span class="label">Svenska</span>
-          <span class="desc">Kraniofacial anamnes</span>
         </a>
         <a href="anamnes-en.html" class="lang-btn">
           <span class="flag">🇬🇧</span>
           <span class="label">English</span>
-          <span class="desc">Craniofacial History</span>
         </a>
       </div>
     </div>
-
-    <hr class="divider">
 
     <div class="form-group">
       <div class="form-group-title">Symptom Checklist / Symtomchecklista</div>
@@ -136,17 +137,13 @@
         <a href="checklist-sv.html" class="lang-btn">
           <span class="flag">🇸🇪</span>
           <span class="label">Svenska</span>
-          <span class="desc">Symtomchecklista – Tungband</span>
         </a>
         <a href="checklist-en.html" class="lang-btn">
           <span class="flag">🇬🇧</span>
           <span class="label">English</span>
-          <span class="desc">Symptom Checklist – Tongue Tie</span>
         </a>
       </div>
     </div>
-
-    <hr class="divider">
 
     <div class="form-group">
       <div class="form-group-title">TMJ / Käkledsfrageformulär</div>
@@ -154,17 +151,13 @@
         <a href="tmj-sv.html" class="lang-btn">
           <span class="flag">🇸🇪</span>
           <span class="label">Svenska</span>
-          <span class="desc">Käkledsfrageformulär</span>
         </a>
         <a href="tmj-en.html" class="lang-btn">
           <span class="flag">🇬🇧</span>
           <span class="label">English</span>
-          <span class="desc">TMJ Questionnaire</span>
         </a>
       </div>
     </div>
-
-    <hr class="divider">
 
     <div class="form-group">
       <div class="form-group-title">Orthodontics – Children / Ortodonti – Barn</div>
@@ -172,17 +165,13 @@
         <a href="ortho-children-sv.html" class="lang-btn">
           <span class="flag">🇸🇪</span>
           <span class="label">Svenska</span>
-          <span class="desc">Ortodonti – Barn (0–12 år)</span>
         </a>
         <a href="ortho-children-en.html" class="lang-btn">
           <span class="flag">🇬🇧</span>
           <span class="label">English</span>
-          <span class="desc">Orthodontics – Children (0–12)</span>
         </a>
       </div>
     </div>
-
-    <hr class="divider">
 
     <div class="form-group">
       <div class="form-group-title">Orthodontics – Adults / Ortodonti – Vuxna</div>
@@ -190,12 +179,10 @@
         <a href="ortho-adults-sv.html" class="lang-btn">
           <span class="flag">🇸🇪</span>
           <span class="label">Svenska</span>
-          <span class="desc">Ortodonti – Vuxna</span>
         </a>
         <a href="ortho-adults-en.html" class="lang-btn">
           <span class="flag">🇬🇧</span>
           <span class="label">English</span>
-          <span class="desc">Orthodontics – Adults</span>
         </a>
       </div>
     </div>
