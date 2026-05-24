@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Airway Clinic – Tungband (Vuxna) - Symtomchecklista</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #f3f2f3;
+      --ink: #31305f;
+      --text: #4b4b63;
+      --muted: #6f6f7a;
+      --gold: #b99645;
+      --gold-hover: #d4b055;
+      --line: #6c6e88;
+      --box: #d9d9de;
+      --success: #2e7d32;
+      --error: #c62828;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #e9e9ec;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      padding: 24px 16px;
+      min-height: 100vh;
+    }
+    .sheet {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg);
+      border: 2px solid var(--line);
+      padding: 32px 34px 28px;
+    }
+    @media (max-width: 600px) {
+      .sheet { padding: 20px 18px 24px; }
+      h1 { font-size: 28px !important; margin-left: 0 !important; }
+      li { font-size: 17px !important; }
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .logo-img { height: 60px; width: auto; object-fit: contain; flex: 0 0 auto; }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 14px;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .back-link:hover { text-decoration: underline; }
+    h1 {
+      margin: 12px 0 26px 0;
+      color: var(--ink);
+      font-size: 36px;
+      line-height: 1.1;
+      font-family: "Arial Narrow", Arial, sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .contact-fields {
+      margin: 0 0 28px 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 600px) { .contact-fields { grid-template-columns: 1fr; } }
+    .field { display: flex; flex-direction: column; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .field input {
+      padding: 10px 12px; font-size: 16px; border: 2px solid var(--box);
+      border-radius: 4px; background: #fff; color: var(--text); transition: border-color 0.2s;
+    }
+    .field input:focus { outline: none; border-color: var(--gold); }
+    .field input.error { border-color: var(--error); }
+    .field .error-msg { color: var(--error); font-size: 12px; margin-top: 4px; display: none; }
+    .checklist-label { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 16px; }
+    ul { list-style: none; padding: 0; margin: 0; }
+    li {
+      display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start;
+      font-size: 19px; line-height: 1.4; margin: 12px 0; cursor: pointer;
+    }
+    li input[type="checkbox"] { width: 22px; height: 22px; margin-top: 3px; accent-color: var(--gold); cursor: pointer; }
+    li span.txt { user-select: none; }
+    .submit-section { margin-top: 28px; text-align: center; }
+    .submit-btn {
+      background: var(--gold); color: #fff; border: none; padding: 14px 48px;
+      font-size: 18px; font-weight: 700; letter-spacing: 0.05em; border-radius: 6px;
+      cursor: pointer; transition: background 0.2s, transform 0.1s;
+    }
+    .submit-btn:hover { background: var(--gold-hover); }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .submit-error { display: none; text-align: center; margin-top: 12px; color: var(--error); font-size: 14px; }
+    .counter { text-align: center; margin-top: 12px; font-size: 14px; color: var(--muted); }
+    .counter strong { color: var(--gold); }
+    .success-msg { display: none; text-align: center; padding: 32px 20px; }
+    .success-msg .check { font-size: 48px; color: var(--success); margin-bottom: 16px; }
+    .success-msg h2 { color: var(--ink); font-size: 24px; margin-bottom: 8px; }
+    .success-msg p { color: var(--muted); font-size: 16px; line-height: 1.5; }
+    .foot { margin-top: 28px; font-size: 15px; color: var(--muted); line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <a href="checklist.html" class="back-link">← Tillbaka / Back</a>
+    <div class="top">
+      <img class="logo-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/Z9UtrrCvJc8ObhTIILLF/media/697504ceeb392b3e880ee4d4.png" alt="Airway Clinic logotyp">
+    </div>
+
+    <h1>Tungband (Vuxna) - Symtomchecklista</h1>
+
+    <form id="survey-form">
+      <div class="contact-fields">
+        <div class="field">
+          <label for="fname">Förnamn *</label>
+          <input type="text" id="fname" name="firstName" required placeholder="Ditt förnamn">
+          <span class="error-msg">Ange ditt förnamn</span>
+        </div>
+        <div class="field">
+          <label for="lname">Efternamn *</label>
+          <input type="text" id="lname" name="lastName" required placeholder="Ditt efternamn">
+          <span class="error-msg">Ange ditt efternamn</span>
+        </div>
+        <div class="field">
+          <label for="email">E-postadress *</label>
+          <input type="email" id="email" name="email" required placeholder="din@email.se">
+          <span class="error-msg">Ange en giltig e-postadress</span>
+        </div>
+        <div class="field">
+          <label for="phone">Telefonnummer</label>
+          <input type="tel" id="phone" name="phone" placeholder="070-123 45 67">
+        </div>
+      </div>
+
+      <div class="checklist-label">Markera de symtom som stämmer överens med din upplevelse:</div>
+
+      <ul id="symptoms">
+        <li><input type="checkbox" name="s1" id="s1"><span class="txt">Jag känner mig orolig eller "på helspänn" i kroppen, även när livet är lugnt</span></li>
+        <li><input type="checkbox" name="s2" id="s2"><span class="txt">Jag är trött men samtidigt uppvarvad, eller kroniskt utmattad</span></li>
+        <li><input type="checkbox" name="s3" id="s3"><span class="txt">Jag har svårt att verkligen slappna av</span></li>
+        <li><input type="checkbox" name="s4" id="s4"><span class="txt">Jag snarkar</span></li>
+        <li><input type="checkbox" name="s5" id="s5"><span class="txt">Jag vaknar utan att känna mig utvilad trots tillräckligt med sömn</span></li>
+        <li><input type="checkbox" name="s6" id="s6"><span class="txt">Jag har fått höra att jag har UARS eller sömnapné (eller misstänker det)</span></li>
+        <li><input type="checkbox" name="s7" id="s7"><span class="txt">Jag biter ihop eller gnisslar tänder</span></li>
+        <li><input type="checkbox" name="s8" id="s8"><span class="txt">Jag har käksmärta, klickljud eller symtom från TMJ</span></li>
+        <li><input type="checkbox" name="s9" id="s9"><span class="txt">Jag får ofta huvudvärk eller spänningar i ansiktet</span></li>
+        <li><input type="checkbox" name="s10" id="s10"><span class="txt">Jag har kronisk stelhet i nacke eller axlar</span></li>
+        <li><input type="checkbox" name="s11" id="s11"><span class="txt">Jag märker framåtlutad huvudhållning eller belastning i överkroppen</span></li>
+        <li><input type="checkbox" name="s12" id="s12"><span class="txt">Min tunga har svårt att vila bekvämt mot gommen</span></li>
+        <li><input type="checkbox" name="s13" id="s13"><span class="txt">Jag har haft trångställning av tänder, eller återfall efter tandreglering</span></li>
+        <li><input type="checkbox" name="s14" id="s14"><span class="txt">Långvarig munandning</span></li>
+      </ul>
+
+      <div class="counter">Du har markerat <strong id="count">0</strong> av 14 symtom</div>
+
+      <div class="submit-section">
+        <button type="submit" class="submit-btn" id="submitBtn">Skicka checklista</button>
+        <div class="submit-error" id="submitError">Något gick fel. Försök igen.</div>
+      </div>
+    </form>
+
+    <div class="success-msg" id="success">
+      <div class="check">&#10003;</div>
+      <h2>Tack för din checklista!</h2>
+      <p>Vi har tagit emot dina svar och kommer att kontakta dig inom kort.</p>
+    </div>
+
+    <p class="foot">Detta är ingen diagnos. Det är ett screeningverktyg för att hjälpa till att avgöra om tungband någonsin har övervägts.</p>
+  </div>
+
+  <script>
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const countEl = document.getElementById('count');
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        countEl.textContent = document.querySelectorAll('input[type="checkbox"]:checked').length;
+      });
+    });
+
+    document.querySelectorAll('li').forEach(li => {
+      li.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'INPUT') {
+          const cb = li.querySelector('input[type="checkbox"]');
+          cb.checked = !cb.checked;
+          cb.dispatchEvent(new Event('change'));
+        }
+      });
+    });
+
+    const form = document.getElementById('survey-form');
+    const requiredFields = form.querySelectorAll('input[required]');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitError = document.getElementById('submitError');
+
+    function validateField(input) {
+      const errMsg = input.parentElement.querySelector('.error-msg');
+      if (!input.value.trim() || (input.type === 'email' && !input.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))) {
+        input.classList.add('error');
+        if (errMsg) errMsg.style.display = 'block';
+        return false;
+      }
+      input.classList.remove('error');
+      if (errMsg) errMsg.style.display = 'none';
+      return true;
+    }
+
+    requiredFields.forEach(f => {
+      f.addEventListener('input', () => validateField(f));
+      f.addEventListener('blur', () => validateField(f));
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      let valid = true;
+      requiredFields.forEach(f => { if (!validateField(f)) valid = false; });
+      if (!valid) return;
+
+      const symptoms = [];
+      const symptomTexts = [];
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          symptoms.push(cb.parentElement.querySelector('.txt').textContent);
+        }
+      });
+
+      const firstName = document.getElementById('fname').value.trim();
+      const lastName = document.getElementById('lname').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Skickar...';
+      submitError.style.display = 'none';
+
+      try {
+        // Generate PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const pageW = doc.internal.pageSize.getWidth();
+        const margin = 15;
+        const usable = pageW - margin * 2;
+        let y = 15;
+
+        function addText(text, size, bold) {
+          doc.setFontSize(size);
+          doc.setFont('helvetica', bold ? 'bold' : 'normal');
+          const lines = doc.splitTextToSize(text, usable);
+          if (y + lines.length * (size * 0.45) > 280) { doc.addPage(); y = 15; }
+          doc.text(lines, margin, y);
+          y += lines.length * (size * 0.45) + 2;
+        }
+
+        // Header
+        doc.setDrawColor(55, 183, 181);
+        doc.setLineWidth(0.5);
+        doc.line(margin, 12, pageW - margin, 12);
+        addText('Airway Clinic', 10, false);
+        addText('Symtomchecklista – Tungband vuxna', 18, true);
+        doc.line(margin, y, pageW - margin, y);
+        y += 6;
+
+        addText('Kontaktuppgifter', 13, true);
+        addText('Namn: ' + firstName + ' ' + lastName, 10, false);
+        addText('E-post: ' + email, 10, false);
+        if (phone) addText('Telefon: ' + phone, 10, false);
+        addText('Datum: ' + new Date().toISOString().slice(0, 10), 10, false);
+        y += 4;
+
+        // Symptoms section
+        if (y + 12 > 280) { doc.addPage(); y = 15; }
+        doc.setFillColor(55, 183, 181);
+        doc.rect(margin, y, usable, 7, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(12);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Markerade symtom (' + symptoms.length + ' av 14)', margin + 3, y + 5.5);
+        doc.setTextColor(75, 75, 99);
+        y += 14;
+
+        if (symptoms.length === 0) {
+          addText('Inga symtom markerade.', 10, false);
+        } else {
+          symptoms.forEach((s, i) => {
+            addText((i + 1) + '. ' + s, 10, false);
+            y += 2;
+          });
+        }
+
+        y += 4;
+        // Unchecked symptoms
+        const unchecked = [];
+        checkboxes.forEach(cb => {
+          if (!cb.checked) unchecked.push(cb.parentElement.querySelector('.txt').textContent);
+        });
+
+        if (unchecked.length > 0) {
+          if (y + 12 > 280) { doc.addPage(); y = 15; }
+          doc.setFillColor(108, 110, 136);
+          doc.rect(margin, y, usable, 7, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(12);
+          doc.setFont('helvetica', 'bold');
+          doc.text('Ej markerade symtom (' + unchecked.length + ' av 14)', margin + 3, y + 5.5);
+          doc.setTextColor(75, 75, 99);
+          y += 14;
+
+          unchecked.forEach((s, i) => {
+            addText((i + 1) + '. ' + s, 10, false);
+            y += 2;
+          });
+        }
+
+        const pdfBase64 = doc.output('datauristring').split(',')[1];
+
+        const res = await fetch('https://airway-clinic-proxy.airwayclinicproxy.workers.dev/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            phone: phone || '',
+            symptoms: symptoms,
+            _formType: 'symptom-checklist-sv',
+            pdfBase64: pdfBase64
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || 'Kunde inte skicka');
+        }
+
+        form.style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+
+      } catch (err) {
+        console.error('Submission error:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Skicka checklista';
+        submitError.textContent = 'Något gick fel: ' + (err.message || 'Okänt fel');
+        submitError.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Airway Clinic – TMJ Questionnaire</title>
+  <style>
+    :root {
+      --bg: #f3f2f3;
+      --ink: #31305f;
+      --text: #4b4b63;
+      --muted: #6f6f7a;
+      --gold: #b99645;
+      --gold-hover: #d4b055;
+      --line: #6c6e88;
+      --box: #d9d9de;
+      --success: #2e7d32;
+      --error: #c62828;
+      --section-bg: #ebeaeb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #e9e9ec;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      padding: 24px 16px;
+      min-height: 100vh;
+    }
+    .sheet {
+      max-width: 900px;
+      margin: 0 auto;
+      background: var(--bg);
+      border: 2px solid var(--line);
+      padding: 32px 34px 28px;
+    }
+    @media (max-width: 600px) {
+      .sheet { padding: 20px 18px 24px; }
+      h1 { font-size: 28px !important; margin-left: 0 !important; }
+    }
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .logo-img { height: 60px; width: auto; object-fit: contain; }
+    h1 {
+      margin: 12px 0 8px 0;
+      color: var(--ink);
+      font-size: 36px;
+      line-height: 1.1;
+      font-family: "Arial Narrow", Arial, sans-serif;
+      font-weight: 800;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .subtitle { text-align: center; color: var(--muted); font-size: 15px; margin-bottom: 28px; line-height: 1.5; }
+    .progress-bar { position: sticky; top: 0; background: var(--bg); padding: 10px 0 6px; z-index: 100; border-bottom: 1px solid var(--box); margin-bottom: 20px; }
+    .progress-track { height: 6px; background: var(--box); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--gold); border-radius: 3px; width: 0%; transition: width 0.3s; }
+    .progress-text { text-align: center; font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .section { background: var(--section-bg); border: 1px solid var(--box); border-radius: 8px; padding: 20px 22px; margin-bottom: 20px; }
+    .section-title { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--gold); display: flex; align-items: center; gap: 8px; }
+    .section-title .emoji { font-size: 20px; }
+    .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 600px) { .fields { grid-template-columns: 1fr; } }
+    .field { display: flex; flex-direction: column; margin-bottom: 4px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label, .option-group > label { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 5px; line-height: 1.3; }
+    .field input, .field textarea, .field select { padding: 9px 12px; font-size: 15px; border: 2px solid var(--box); border-radius: 4px; background: #fff; color: var(--text); transition: border-color 0.2s; font-family: inherit; }
+    .field textarea { resize: vertical; min-height: 60px; }
+    .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--gold); }
+    .field input.error, .field textarea.error { border-color: var(--error); }
+    .field .error-msg { color: var(--error); font-size: 11px; margin-top: 3px; display: none; }
+    .option-group { margin-bottom: 14px; }
+    .option-group > label { display: block; margin-bottom: 8px; font-size: 14px; }
+    .options { display: flex; flex-wrap: wrap; gap: 8px; }
+    .options.vertical { flex-direction: column; gap: 6px; }
+    .opt-label { display: flex; align-items: center; gap: 7px; font-size: 14px; cursor: pointer; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--box); background: #fff; transition: all 0.15s; line-height: 1.3; }
+    .opt-label:hover { border-color: var(--gold); background: #faf6ef; }
+    .opt-label input[type="radio"], .opt-label input[type="checkbox"] { accent-color: var(--gold); width: 16px; height: 16px; flex-shrink: 0; }
+    .other-field { margin-top: 6px; display: none; }
+    .other-field.visible { display: block; }
+    .other-field input { padding: 7px 10px; font-size: 14px; border: 1px solid var(--box); border-radius: 4px; width: 100%; max-width: 400px; }
+    .submit-section { margin-top: 28px; text-align: center; }
+    .submit-btn { background: var(--gold); color: #fff; border: none; padding: 14px 48px; font-size: 18px; font-weight: 700; letter-spacing: 0.05em; border-radius: 6px; cursor: pointer; transition: background 0.2s, transform 0.1s; }
+    .submit-btn:hover { background: var(--gold-hover); }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .submit-error { display: none; text-align: center; margin-top: 12px; color: var(--error); font-size: 14px; }
+    .success-msg { display: none; text-align: center; padding: 32px 20px; }
+    .success-msg .check { font-size: 48px; color: var(--success); margin-bottom: 16px; }
+    .success-msg h2 { color: var(--ink); font-size: 24px; margin-bottom: 8px; }
+    .success-msg p { color: var(--muted); font-size: 16px; line-height: 1.5; }
+    .foot { margin-top: 20px; font-size: 13px; color: var(--muted); line-height: 1.5; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <a href="tmj.html" class="back-link" style="display:inline-block;margin-bottom:14px;color:#b99645;text-decoration:none;font-size:14px;font-weight:600;">&larr; Back</a>
+    <div class="top">
+      <img class="logo-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/Z9UtrrCvJc8ObhTIILLF/media/697504ceeb392b3e880ee4d4.png" alt="Airway Clinic logo">
+    </div>
+    <h1>TMJ Questionnaire</h1>
+    <p class="subtitle">Questions about jaw joint issues and related symptoms.</p>
+    <form id="tmj-form">
+      <div class="progress-bar">
+        <div class="progress-track"><div class="progress-fill"></div></div>
+        <div class="progress-text">0 / 8 sections completed</div>
+      </div>
+      <!-- ===== SECTION 1: CONTACT INFO ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">👤</span> Contact Information</div>
+        <div class="fields">
+          <div class="field">
+            <label for="email">Email address *</label>
+            <input type="email" id="email" name="email" required placeholder="your@email.com">
+            <span class="error-msg">Please enter a valid email address</span>
+          </div>
+          <div class="field">
+            <label for="namn">Name</label>
+            <input type="text" id="namn" name="namn" placeholder="First and last name">
+          </div>
+          <div class="field">
+            <label for="fodelsedatum">Date of birth</label>
+            <input type="text" id="fodelsedatum" name="fodelsedatum" placeholder="e.g. 15 March 1985">
+          </div>
+          <div class="field">
+            <label for="adress">Address</label>
+            <input type="text" id="adress" name="adress" placeholder="Street, postal code, city">
+          </div>
+          <div class="field">
+            <label for="datum">Date</label>
+            <input type="date" id="datum" name="datum">
+          </div>
+        </div>
+        <div class="option-group" style="margin-top: 14px;">
+          <label>Do you consent to your data being stored in our database?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="consent" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="consent" value="nej"> No</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION 2: TMJ SYMPTOMS ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">🦴</span> TMJ Symptoms</div>
+        <div class="option-group">
+          <label>Do you have pain in your jaw joints?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="kakled_smartta" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="kakled_smartta" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>When does the pain occur?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="checkbox" name="smartta_nar" value="vid_atande"> When eating</label>
+            <label class="opt-label"><input type="checkbox" name="smartta_nar" value="vid_gapning"> When opening wide / yawning</label>
+            <label class="opt-label"><input type="checkbox" name="smartta_nar" value="pa_morgonen"> In the morning</label>
+            <label class="opt-label"><input type="checkbox" name="smartta_nar" value="pa_kvallen"> In the evening</label>
+            <label class="opt-label"><input type="checkbox" name="smartta_nar" value="konstant"> Constant</label>
+            <label class="opt-label"><input type="checkbox" name="smartta_nar" value="annat"> Other</label>
+          </div>
+          <div class="other-field" data-show-when-checkbox="smartta_nar=annat">
+            <input type="text" name="smartta_nar_annat" placeholder="Describe...">
+          </div>
+        </div>
+        <div class="field full">
+          <label for="smartta_frekvens">How often do you experience jaw joint pain?</label>
+          <input type="text" id="smartta_frekvens" name="smartta_frekvens" placeholder="e.g. daily, a few times a week...">
+        </div>
+        <div class="field">
+          <label for="smartta_intensitet">Pain intensity (1–10)</label>
+          <input type="number" id="smartta_intensitet" name="smartta_intensitet" min="1" max="10" placeholder="1 = mild, 10 = worst imaginable">
+        </div>
+        <div class="option-group">
+          <label>Clicking or popping sounds from the jaw joint?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="klickande" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="klickande" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Which side clicks?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="klick_sida" value="vanster"> Left</label>
+            <label class="opt-label"><input type="radio" name="klick_sida" value="hoger"> Right</label>
+            <label class="opt-label"><input type="radio" name="klick_sida" value="bada"> Both sides</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>When does the clicking occur?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="checkbox" name="klick_nar" value="vid_atande"> When eating</label>
+            <label class="opt-label"><input type="checkbox" name="klick_nar" value="vid_gapning"> When opening wide / yawning</label>
+            <label class="opt-label"><input type="checkbox" name="klick_nar" value="vid_pratande"> When talking</label>
+            <label class="opt-label"><input type="checkbox" name="klick_nar" value="annat"> Other</label>
+          </div>
+          <div class="other-field" data-show-when-checkbox="klick_nar=annat">
+            <input type="text" name="klick_nar_annat" placeholder="Describe...">
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Have you experienced jaw locking?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="radio" name="lasning" value="ja_oppen"> Yes – jaw locks open</label>
+            <label class="opt-label"><input type="radio" name="lasning" value="ja_stangd"> Yes – jaw locks closed</label>
+            <label class="opt-label"><input type="radio" name="lasning" value="ja_bada"> Yes – both</label>
+            <label class="opt-label"><input type="radio" name="lasning" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="lasning_frekvens">If your jaw locks, how often?</label>
+          <input type="text" id="lasning_frekvens" name="lasning_frekvens" placeholder="e.g. rarely, a few times a week...">
+        </div>
+        <div class="option-group">
+          <label>Grating or crunching sounds from the jaw joint?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="grusande" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="grusande" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Difficulty opening your mouth wide?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="svart_oppenna" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="svart_oppenna" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="svart_oppenna_beskriv">If yes, describe:</label>
+          <textarea id="svart_oppenna_beskriv" name="svart_oppenna_beskriv" placeholder="e.g. how much you can open, if it hurts..."></textarea>
+        </div>
+        <div class="option-group">
+          <label>Pain when chewing?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="smart_tuggar" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="smart_tuggar" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Pain when yawning?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="smart_gaspar" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="smart_gaspar" value="nej"> No</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SECTION 3: HEAD & NECK ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">🤕</span> Head &amp; Neck</div>
+        <div class="option-group">
+          <label>Do you get headaches?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="huvudvark" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="huvudvark" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="huvudvark_frekvens">How often do you get headaches?</label>
+          <input type="text" id="huvudvark_frekvens" name="huvudvark_frekvens" placeholder="e.g. daily, a few times a week...">
+        </div>
+        <div class="option-group">
+          <label>Where is the headache located?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="checkbox" name="huvudvark_plats" value="panna"> Forehead</label>
+            <label class="opt-label"><input type="checkbox" name="huvudvark_plats" value="tinningar"> Temples</label>
+            <label class="opt-label"><input type="checkbox" name="huvudvark_plats" value="bakhuvud"> Back of head</label>
+            <label class="opt-label"><input type="checkbox" name="huvudvark_plats" value="hela_huvudet"> Whole head</label>
+            <label class="opt-label"><input type="checkbox" name="huvudvark_plats" value="annat"> Other</label>
+          </div>
+          <div class="other-field" data-show-when-checkbox="huvudvark_plats=annat">
+            <input type="text" name="huvudvark_plats_annat" placeholder="Describe...">
+          </div>
+        </div>
+        <div class="option-group">
+          <label>What type of headache?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="checkbox" name="huvudvark_typ" value="trott"> Dull / pressing</label>
+            <label class="opt-label"><input type="checkbox" name="huvudvark_typ" value="pulserande"> Throbbing / sharp</label>
+            <label class="opt-label"><input type="checkbox" name="huvudvark_typ" value="migran"> Migraine</label>
+            <label class="opt-label"><input type="checkbox" name="huvudvark_typ" value="annat"> Other</label>
+          </div>
+          <div class="other-field" data-show-when-checkbox="huvudvark_typ=annat">
+            <input type="text" name="huvudvark_typ_annat" placeholder="Describe...">
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you have neck pain or stiffness?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="nacke" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="nacke" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="nacke_beskriv">Describe your neck issues:</label>
+          <textarea id="nacke_beskriv" name="nacke_beskriv" placeholder="e.g. morning stiffness, ache after work..."></textarea>
+        </div>
+        <div class="option-group">
+          <label>Do you have shoulder pain or tension?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="axlar" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="axlar" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field">
+          <label for="axlar_beskriv">Describe:</label>
+          <input type="text" id="axlar_beskriv" name="axlar_beskriv" placeholder="Which side, type of pain...">
+        </div>
+        <div class="option-group">
+          <label>Do you have ear symptoms?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="checkbox" name="oron" value="smartta"> Ear pain</label>
+            <label class="opt-label"><input type="checkbox" name="oron" value="tinnitus"> Tinnitus (ringing / buzzing)</label>
+            <label class="opt-label"><input type="checkbox" name="oron" value="stopp"> Feeling of blocked ears</label>
+            <label class="opt-label"><input type="checkbox" name="oron" value="yrsel"> Dizziness</label>
+            <label class="opt-label"><input type="checkbox" name="oron" value="inga"> No ear symptoms</label>
+            <label class="opt-label"><input type="checkbox" name="oron" value="annat"> Other</label>
+          </div>
+          <div class="other-field" data-show-when-checkbox="oron=annat">
+            <input type="text" name="oron_annat" placeholder="Describe...">
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you have facial pain?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="ansikte_smartta" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="ansikte_smartta" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="ansikte_beskriv">If yes, where and how?</label>
+          <textarea id="ansikte_beskriv" name="ansikte_beskriv" placeholder="Describe location and type of pain..."></textarea>
+        </div>
+      </div>
+
+      <!-- ===== SECTION 4: BITE & TEETH ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">🦷</span> Bite &amp; Teeth</div>
+        <div class="option-group">
+          <label>Have you noticed changes in your bite?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="bett_forandring" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="bett_forandring" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="bett_forandring_beskriv">If yes, describe:</label>
+          <textarea id="bett_forandring_beskriv" name="bett_forandring_beskriv" placeholder="e.g. teeth don't meet the same way, bite feels off..."></textarea>
+        </div>
+        <div class="option-group">
+          <label>Do you have sensitive teeth?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="tand_kanslig" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="tand_kanslig" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Have you noticed tooth wear?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="checkbox" name="tand_slitage" value="platta"> Teeth have become flatter</label>
+            <label class="opt-label"><input type="checkbox" name="tand_slitage" value="flisiga"> Chipped edges</label>
+            <label class="opt-label"><input type="checkbox" name="tand_slitage" value="inget"> No wear</label>
+            <label class="opt-label"><input type="checkbox" name="tand_slitage" value="vet_ej"> Don't know</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you have gum recession?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="tandkott" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="tandkott" value="nej"> No</label>
+            <label class="opt-label"><input type="radio" name="tandkott" value="vet_ej"> Don't know</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Difficulty biting into things?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="svart_bita" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="svart_bita" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="svart_bita_beskriv">If yes, describe:</label>
+          <textarea id="svart_bita_beskriv" name="svart_bita_beskriv" placeholder="e.g. hard to bite into crusty bread, apples..."></textarea>
+        </div>
+        <div class="option-group">
+          <label>Previous orthodontic treatment (braces)?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="ortodonti" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="ortodonti" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="ortodonti_beskriv">If yes, what and when?</label>
+          <input type="text" id="ortodonti_beskriv" name="ortodonti_beskriv" placeholder="e.g. braces as teenager, Invisalign...">
+        </div>
+      </div>
+      <!-- ===== SECTION 5: BRUXISM ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">😬</span> Bruxism (Grinding &amp; Clenching)</div>
+        <div class="option-group">
+          <label>Do you grind your teeth at night?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="radio" name="gnisslar_natt" value="ja_vet_sjalv"> Yes – I know myself</label>
+            <label class="opt-label"><input type="radio" name="gnisslar_natt" value="ja_nagon_berattat"> Yes – someone has told me</label>
+            <label class="opt-label"><input type="radio" name="gnisslar_natt" value="nej"> No</label>
+            <label class="opt-label"><input type="radio" name="gnisslar_natt" value="vet_ej"> Don't know</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you clench your teeth during the day?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="pressar_dag" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="pressar_dag" value="nej"> No</label>
+            <label class="opt-label"><input type="radio" name="pressar_dag" value="ibland"> Sometimes</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you wake up with a sore jaw?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="om_kake_morgon" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="om_kake_morgon" value="nej"> No</label>
+            <label class="opt-label"><input type="radio" name="om_kake_morgon" value="ibland"> Sometimes</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you use a night guard / bite splint?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="radio" name="bettskena" value="ja_nuvarande"> Yes – currently using</label>
+            <label class="opt-label"><input type="radio" name="bettskena" value="ja_tidigare"> Yes – have used previously</label>
+            <label class="opt-label"><input type="radio" name="bettskena" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="bettskena_beskriv">If yes, what type and for how long?</label>
+          <input type="text" id="bettskena_beskriv" name="bettskena_beskriv" placeholder="e.g. hard night guard, 2 years...">
+        </div>
+      </div>
+
+      <!-- ===== SECTION 6: SLEEP & BREATHING ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">😴</span> Sleep &amp; Breathing</div>
+        <div class="option-group">
+          <label>How is your sleep quality?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="somn_kvalitet" value="bra"> Good</label>
+            <label class="opt-label"><input type="radio" name="somn_kvalitet" value="ok"> Fair</label>
+            <label class="opt-label"><input type="radio" name="somn_kvalitet" value="daligt"> Poor</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you snore?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="snarkar" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="snarkar" value="nej"> No</label>
+            <label class="opt-label"><input type="radio" name="snarkar" value="vet_ej"> Don't know</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you breathe through your mouth, especially at night?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="munandning" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="munandning" value="nej"> No</label>
+            <label class="opt-label"><input type="radio" name="munandning" value="vet_ej"> Don't know</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you wake up gasping for air?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="vaknar_gasandes" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="vaknar_gasandes" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you wake up tired despite a full night's sleep?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="morgon_trott" value="ja"> Yes, often</label>
+            <label class="opt-label"><input type="radio" name="morgon_trott" value="ibland"> Sometimes</label>
+            <label class="opt-label"><input type="radio" name="morgon_trott" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="somn_ovrigt">Other comments about sleep or breathing:</label>
+          <textarea id="somn_ovrigt" name="somn_ovrigt" placeholder="Anything else about your sleep or breathing..."></textarea>
+        </div>
+      </div>
+
+      <!-- ===== SECTION 7: STRESS & LIFESTYLE ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">⚡</span> Stress &amp; Lifestyle</div>
+        <div class="option-group">
+          <label>How would you describe your stress level?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="stress" value="lag"> Low</label>
+            <label class="opt-label"><input type="radio" name="stress" value="medel"> Medium</label>
+            <label class="opt-label"><input type="radio" name="stress" value="hog"> High</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Nail biting?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="nagelbitning" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="nagelbitning" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <label>Do you chew gum frequently?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="tuggummi" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="tuggummi" value="nej"> No</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="tuggummi_beskriv">If yes, how often and how long per day?</label>
+          <input type="text" id="tuggummi_beskriv" name="tuggummi_beskriv" placeholder="e.g. several times a day, only occasionally...">
+        </div>
+        <div class="option-group">
+          <label>Do you have forward head posture (looking down at phone/computer)?</label>
+          <div class="options">
+            <label class="opt-label"><input type="radio" name="framåthuvud" value="ja"> Yes</label>
+            <label class="opt-label"><input type="radio" name="framåthuvud" value="nej"> No</label>
+            <label class="opt-label"><input type="radio" name="framåthuvud" value="ibland"> Sometimes</label>
+          </div>
+        </div>
+        <div class="field full">
+          <label for="skarmtid">How much screen time do you have daily?</label>
+          <input type="text" id="skarmtid" name="skarmtid" placeholder="e.g. 4–6 hours, 8+ hours...">
+        </div>
+      </div>
+
+      <!-- ===== SECTION 8: PREVIOUS TREATMENT ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">🏥</span> Previous Treatment</div>
+        <div class="option-group">
+          <label>Have you previously received treatment for TMJ issues?</label>
+          <div class="options vertical">
+            <label class="opt-label"><input type="checkbox" name="tidigare_behandling" value="fysioterapi"> Physiotherapy</label>
+            <label class="opt-label"><input type="checkbox" name="tidigare_behandling" value="bettskena"> Bite splint / night guard</label>
+            <label class="opt-label"><input type="checkbox" name="tidigare_behandling" value="injektion"> Injection (cortisone / Botox)</label>
+            <label class="opt-label"><input type="checkbox" name="tidigare_behandling" value="kirurgi"> Surgery</label>
+            <label class="opt-label"><input type="checkbox" name="tidigare_behandling" value="akupunktur"> Acupuncture</label>
+            <label class="opt-label"><input type="checkbox" name="tidigare_behandling" value="ingen"> No previous treatment</label>
+            <label class="opt-label"><input type="checkbox" name="tidigare_behandling" value="annat"> Other</label>
+          </div>
+          <div class="other-field" data-show-when-checkbox="tidigare_behandling=annat">
+            <input type="text" name="tidigare_behandling_annat" placeholder="Describe...">
+          </div>
+        </div>
+        <div class="field full">
+          <label for="nuvarande_medicin">Current medications:</label>
+          <textarea id="nuvarande_medicin" name="nuvarande_medicin" placeholder="List any medications you are currently taking..."></textarea>
+        </div>
+        <div class="field full">
+          <label for="andra_halsotillstand">Any other health conditions we should know about?</label>
+          <textarea id="andra_halsotillstand" name="andra_halsotillstand" placeholder="e.g. fibromyalgia, rheumatoid arthritis, sleep apnoea..."></textarea>
+        </div>
+      </div>
+
+      <!-- ===== SECTION 9: ADDITIONAL NOTES ===== -->
+      <div class="section">
+        <div class="section-title"><span class="emoji">📝</span> Additional Notes</div>
+        <div class="field full">
+          <label for="ovrigt">Any additional comments:</label>
+          <textarea id="ovrigt" name="ovrigt" placeholder="Anything else you'd like to add..." style="min-height: 80px;"></textarea>
+        </div>
+      </div>
+      <div class="submit-section">
+        <button type="submit" class="submit-btn" id="submitBtn">Submit questionnaire</button>
+        <div class="submit-error" id="submitError">Something went wrong. Please try again.</div>
+      </div>
+    </form>
+
+    <!-- Success -->
+    <div class="success-msg" id="success">
+      <div class="check">✓</div>
+      <h2>Thank you for your TMJ questionnaire!</h2>
+      <p>We have received your information and will contact you shortly.</p>
+    </div>
+
+    <p class="foot">All information is handled confidentially in accordance with applicable data protection regulations.</p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    // Show "other" fields for radio groups
+    document.querySelectorAll('[data-show-when]').forEach(el => {
+      const [name, value] = el.dataset.showWhen.split('=');
+      document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+        radio.addEventListener('change', () => {
+          el.classList.toggle('visible', radio.value === value && radio.checked);
+        });
+      });
+    });
+
+    // Show "other" fields for checkbox groups
+    document.querySelectorAll('[data-show-when-checkbox]').forEach(el => {
+      const [name, value] = el.dataset.showWhenCheckbox.split('=');
+      document.querySelectorAll(`input[name="${name}"]`).forEach(cb => {
+        cb.addEventListener('change', () => {
+          const anyChecked = [...document.querySelectorAll(`input[name="${name}"]`)]
+            .some(c => c.value === value && c.checked);
+          el.classList.toggle('visible', anyChecked);
+        });
+      });
+    });
+
+    // Progress bar
+    const form = document.getElementById('tmj-form');
+    const sections = form.querySelectorAll('.section');
+    const progressFill = document.querySelector('.progress-fill');
+    const progressText = document.querySelector('.progress-text');
+
+    function updateProgress() {
+      let filled = 0;
+      let total = sections.length - 1;
+      sections.forEach((sec, i) => {
+        if (i === 0) return;
+        const inputs = sec.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked, input[type="text"], input[type="number"], textarea');
+        const hasData = [...inputs].some(inp => {
+          if (inp.type === 'radio' || inp.type === 'checkbox') return inp.checked;
+          return inp.value.trim() !== '';
+        });
+        if (hasData) filled++;
+      });
+      const pct = Math.round((filled / total) * 100);
+      progressFill.style.width = pct + '%';
+      progressText.textContent = filled + ' / ' + total + ' sections completed';
+    }
+    form.addEventListener('input', updateProgress);
+    form.addEventListener('change', updateProgress);
+
+    const submitBtn = document.getElementById('submitBtn');
+    const submitError = document.getElementById('submitError');
+
+    // Email validation
+    const emailField = document.getElementById('email');
+    function validateEmail() {
+      const valid = emailField.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
+      emailField.classList.toggle('error', !valid);
+      emailField.parentElement.querySelector('.error-msg').style.display = valid ? 'none' : 'block';
+      return valid;
+    }
+    emailField.addEventListener('input', validateEmail);
+    emailField.addEventListener('blur', validateEmail);
+
+    // Collect all form data
+    function collectFormData() {
+      const data = {};
+      form.querySelectorAll('input[type="text"], input[type="email"], input[type="date"], input[type="number"], textarea').forEach(input => {
+        if (input.name && input.value.trim()) data[input.name] = input.value.trim();
+      });
+      const radioGroups = new Set();
+      form.querySelectorAll('input[type="radio"]').forEach(r => radioGroups.add(r.name));
+      radioGroups.forEach(name => {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        if (checked) data[name] = checked.value;
+      });
+      const cbGroups = new Set();
+      form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        if (cb.name !== 'consent') cbGroups.add(cb.name);
+      });
+      cbGroups.forEach(name => {
+        const checked = [...form.querySelectorAll(`input[name="${name}"]:checked`)];
+        if (checked.length) data[name] = checked.map(c => c.value).join(', ');
+      });
+      return data;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateEmail()) return;
+
+      const formData = collectFormData();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+      submitError.style.display = 'none';
+
+      try {
+        const fullName = formData.namn || '';
+        const parts = fullName.split(' ');
+        const firstName = parts[0] || '';
+        const lastName = parts.slice(1).join(' ') || '';
+
+        const noteLines = [];
+        const skipKeys = ['namn', 'email', 'fodelsedatum', 'adress', 'datum', 'consent'];
+        Object.entries(formData).forEach(([key, val]) => {
+          if (!skipKeys.includes(key)) noteLines.push(`${key}: ${val}`);
+        });
+
+        // Generate PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const pageW = doc.internal.pageSize.getWidth();
+        const margin = 15;
+        const usable = pageW - margin * 2;
+        let y = 15;
+
+        function addText(text, size, bold) {
+          doc.setFontSize(size);
+          doc.setFont('helvetica', bold ? 'bold' : 'normal');
+          const lines = doc.splitTextToSize(text, usable);
+          if (y + lines.length * (size * 0.45) > 280) { doc.addPage(); y = 15; }
+          doc.text(lines, margin, y);
+          y += lines.length * (size * 0.45) + 2;
+        }
+
+        // Header
+        doc.setDrawColor(55, 183, 181);
+        doc.setLineWidth(0.5);
+        doc.line(margin, 12, pageW - margin, 12);
+        addText('Airway Clinic', 10, false);
+        addText('TMJ Questionnaire', 18, true);
+        doc.line(margin, y, pageW - margin, y);
+        y += 6;
+
+        addText('Contact Information', 13, true);
+        addText(`Name: ${formData.namn || '-'}`, 10, false);
+        addText(`Email: ${formData.email}`, 10, false);
+        addText(`Date of birth: ${formData.fodelsedatum || '-'}`, 10, false);
+        addText(`Address: ${formData.adress || '-'}`, 10, false);
+        addText(`Date: ${formData.datum || '-'}`, 10, false);
+        addText(`Data storage consent: ${formData.consent === 'ja' ? 'Yes' : formData.consent === 'nej' ? 'No' : 'Not specified'}`, 10, false);
+        y += 4;
+
+        const pdfSections = [
+          {
+            title: 'TMJ Symptoms',
+            fields: [
+              { key: 'kakled_smartta', q: 'Do you have pain in your jaw joints?' },
+              { key: 'smartta_nar', q: 'When does the pain occur?' },
+              { key: 'smartta_nar_annat', q: 'Pain timing – other' },
+              { key: 'smartta_frekvens', q: 'How often do you experience jaw joint pain?' },
+              { key: 'smartta_intensitet', q: 'Pain intensity (1–10)' },
+              { key: 'klickande', q: 'Clicking or popping sounds?' },
+              { key: 'klick_sida', q: 'Which side clicks?' },
+              { key: 'klick_nar', q: 'When does the clicking occur?' },
+              { key: 'klick_nar_annat', q: 'Clicking – other' },
+              { key: 'lasning', q: 'Have you experienced jaw locking?' },
+              { key: 'lasning_frekvens', q: 'If jaw locks, how often?' },
+              { key: 'grusande', q: 'Grating or crunching sounds?' },
+              { key: 'svart_oppenna', q: 'Difficulty opening mouth wide?' },
+              { key: 'svart_oppenna_beskriv', q: 'Difficulty opening – describe' },
+              { key: 'smart_tuggar', q: 'Pain when chewing?' },
+              { key: 'smart_gaspar', q: 'Pain when yawning?' }
+            ]
+          },
+          {
+            title: 'Head & Neck',
+            fields: [
+              { key: 'huvudvark', q: 'Do you get headaches?' },
+              { key: 'huvudvark_frekvens', q: 'How often do you get headaches?' },
+              { key: 'huvudvark_plats', q: 'Where is the headache located?' },
+              { key: 'huvudvark_plats_annat', q: 'Headache location – other' },
+              { key: 'huvudvark_typ', q: 'What type of headache?' },
+              { key: 'huvudvark_typ_annat', q: 'Headache type – other' },
+              { key: 'nacke', q: 'Do you have neck pain or stiffness?' },
+              { key: 'nacke_beskriv', q: 'Describe neck issues:' },
+              { key: 'axlar', q: 'Do you have shoulder pain or tension?' },
+              { key: 'axlar_beskriv', q: 'Shoulder – describe' },
+              { key: 'oron', q: 'Do you have ear symptoms?' },
+              { key: 'oron_annat', q: 'Ear symptoms – other' },
+              { key: 'ansikte_smartta', q: 'Do you have facial pain?' },
+              { key: 'ansikte_beskriv', q: 'Facial pain – describe' }
+            ]
+          },
+          {
+            title: 'Bite & Teeth',
+            fields: [
+              { key: 'bett_forandring', q: 'Have you noticed changes in your bite?' },
+              { key: 'bett_forandring_beskriv', q: 'Bite changes – describe' },
+              { key: 'tand_kanslig', q: 'Do you have sensitive teeth?' },
+              { key: 'tand_slitage', q: 'Have you noticed tooth wear?' },
+              { key: 'tandkott', q: 'Do you have gum recession?' },
+              { key: 'svart_bita', q: 'Difficulty biting into things?' },
+              { key: 'svart_bita_beskriv', q: 'Difficulty biting – describe' },
+              { key: 'ortodonti', q: 'Previous orthodontic treatment?' },
+              { key: 'ortodonti_beskriv', q: 'Orthodontic treatment – what and when?' }
+            ]
+          },
+          {
+            title: 'Bruxism (Grinding & Clenching)',
+            fields: [
+              { key: 'gnisslar_natt', q: 'Do you grind your teeth at night?' },
+              { key: 'pressar_dag', q: 'Do you clench your teeth during the day?' },
+              { key: 'om_kake_morgon', q: 'Do you wake up with a sore jaw?' },
+              { key: 'bettskena', q: 'Do you use a night guard / bite splint?' },
+              { key: 'bettskena_beskriv', q: 'Night guard – type and duration?' }
+            ]
+          },
+          {
+            title: 'Sleep & Breathing',
+            fields: [
+              { key: 'somn_kvalitet', q: 'How is your sleep quality?' },
+              { key: 'snarkar', q: 'Do you snore?' },
+              { key: 'munandning', q: 'Do you breathe through your mouth at night?' },
+              { key: 'vaknar_gasandes', q: 'Do you wake up gasping for air?' },
+              { key: 'morgon_trott', q: 'Do you wake up tired despite full sleep?' },
+              { key: 'somn_ovrigt', q: 'Other comments about sleep or breathing:' }
+            ]
+          },
+          {
+            title: 'Stress & Lifestyle',
+            fields: [
+              { key: 'stress', q: 'How would you describe your stress level?' },
+              { key: 'nagelbitning', q: 'Nail biting?' },
+              { key: 'tuggummi', q: 'Do you chew gum frequently?' },
+              { key: 'tuggummi_beskriv', q: 'Gum chewing – how often?' },
+              { key: 'framåthuvud', q: 'Do you have forward head posture?' },
+              { key: 'skarmtid', q: 'How much screen time daily?' }
+            ]
+          },
+          {
+            title: 'Previous Treatment',
+            fields: [
+              { key: 'tidigare_behandling', q: 'Previous TMJ treatment?' },
+              { key: 'tidigare_behandling_annat', q: 'Previous treatment – other' },
+              { key: 'nuvarande_medicin', q: 'Current medications:' },
+              { key: 'andra_halsotillstand', q: 'Other health conditions?' }
+            ]
+          },
+          {
+            title: 'Additional Notes',
+            fields: [
+              { key: 'ovrigt', q: 'Any additional comments:' }
+            ]
+          }
+        ];
+
+        pdfSections.forEach(section => {
+          if (y + 12 > 280) { doc.addPage(); y = 15; }
+          doc.setFillColor(55, 183, 181);
+          doc.rect(margin, y, usable, 7, 'F');
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(12);
+          doc.setFont('helvetica', 'bold');
+          doc.text(section.title, margin + 3, y + 5.5);
+          doc.setTextColor(75, 75, 99);
+          y += 12;
+
+          section.fields.forEach(f => {
+            const val = formData[f.key];
+            if (val === undefined || val === null || val === '') return;
+            const displayVal = val.replace(/_/g, ' ');
+            addText(f.q, 10, true);
+            addText(displayVal, 10, false);
+            y += 3;
+          });
+          y += 3;
+        });
+
+        const pdfBase64 = doc.output('datauristring').split(',')[1];
+
+        const res = await fetch('https://airway-clinic-proxy.airwayclinicproxy.workers.dev/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            firstName: firstName || formData.email.split('@')[0],
+            lastName: lastName,
+            email: formData.email,
+            phone: '',
+            symptoms: noteLines,
+            _formType: 'tmj-anamnes-en',
+            pdfBase64: pdfBase64
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || 'Could not submit');
+        }
+
+        form.style.display = 'none';
+        document.querySelector('.progress-bar').style.display = 'none';
+        document.getElementById('success').style.display = 'block';
+
+      } catch (err) {
+        console.error('Submission error:', err);
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit questionnaire';
+        submitError.textContent = 'Something went wrong: ' + (err.message || 'Unknown error');
+        submitError.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

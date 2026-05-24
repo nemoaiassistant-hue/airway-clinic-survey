@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Airway Clinic – Symtomchecklista</title>
+  <title>Airway Clinic – Forms</title>
   <style>
     :root {
       --bg: #f3f2f3;
@@ -14,385 +14,191 @@
       --gold-hover: #d4b055;
       --line: #6c6e88;
       --box: #d9d9de;
-      --success: #2e7d32;
-      --error: #c62828;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background: #e9e9ec;
       font-family: Arial, sans-serif;
       color: var(--text);
       padding: 24px 16px;
       min-height: 100vh;
-    }
-
-    .sheet {
-      max-width: 900px;
-      margin: 0 auto;
-      background: var(--bg);
-      border: 2px solid var(--line);
-      padding: 32px 34px 28px;
-    }
-
-    @media (max-width: 600px) {
-      .sheet { padding: 20px 18px 24px; }
-      h1 { font-size: 32px !important; margin-left: 0 !important; }
-      li { font-size: 17px !important; }
-    }
-
-    .top {
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 14px;
     }
-
+    .picker {
+      max-width: 600px;
+      width: 100%;
+      background: var(--bg);
+      border: 2px solid var(--line);
+      padding: 40px 34px;
+      text-align: center;
+    }
     .logo-img {
       height: 60px;
-      width: auto;
-      object-fit: contain;
-      flex: 0 0 auto;
+      margin-bottom: 20px;
     }
-
-    .brand {
-      letter-spacing: .08em;
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--ink);
-    }
-
     h1 {
-      margin: 12px 0 26px 56px;
-      color: var(--ink);
-      font-size: 42px;
-      line-height: 1.1;
-      font-family: "Arial Narrow", Arial, sans-serif;
-      font-weight: 800;
-      text-transform: uppercase;
-    }
-
-    /* Contact fields */
-    .contact-fields {
-      margin: 0 0 28px 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    @media (max-width: 600px) {
-      .contact-fields { grid-template-columns: 1fr; }
-    }
-    .field { display: flex; flex-direction: column; }
-    .field.full { grid-column: 1 / -1; }
-    .field label {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink);
-      margin-bottom: 6px;
-    }
-    .field input {
-      padding: 10px 12px;
-      font-size: 16px;
-      border: 2px solid var(--box);
-      border-radius: 4px;
-      background: #fff;
-      color: var(--text);
-      transition: border-color 0.2s;
-    }
-    .field input:focus {
-      outline: none;
-      border-color: var(--gold);
-    }
-    .field input.error {
-      border-color: var(--error);
-    }
-    .field .error-msg {
-      color: var(--error);
-      font-size: 12px;
-      margin-top: 4px;
-      display: none;
-    }
-
-    /* Checklist */
-    .checklist-label {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--ink);
-      margin-bottom: 16px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0 0 0 0;
-      margin: 0;
-    }
-
-    li {
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      gap: 12px;
-      align-items: start;
-      font-size: 19px;
-      line-height: 1.4;
-      margin: 12px 0;
-      cursor: pointer;
-    }
-
-    li input[type="checkbox"] {
-      width: 22px; height: 22px;
-      margin-top: 3px;
-      accent-color: var(--gold);
-      cursor: pointer;
-    }
-
-    li span.txt {
-      user-select: none;
-    }
-
-    /* Submit */
-    .submit-section {
-      margin-top: 28px;
-      text-align: center;
-    }
-
-    .submit-btn {
-      background: var(--gold);
-      color: #fff;
-      border: none;
-      padding: 14px 48px;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .submit-btn:hover { background: var(--gold-hover); }
-    .submit-btn:active { transform: scale(0.98); }
-    .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .submit-error {
-      display: none;
-      text-align: center;
-      margin-top: 12px;
-      color: var(--error);
-      font-size: 14px;
-    }
-
-    /* Counter */
-    .counter {
-      text-align: center;
-      margin-top: 12px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-    .counter strong { color: var(--gold); }
-
-    /* Success message */
-    .success-msg {
-      display: none;
-      text-align: center;
-      padding: 32px 20px;
-    }
-    .success-msg .check {
-      font-size: 48px;
-      color: var(--success);
-      margin-bottom: 16px;
-    }
-    .success-msg h2 {
       color: var(--ink);
       font-size: 24px;
+      font-weight: 800;
+      text-transform: uppercase;
       margin-bottom: 8px;
+      font-family: "Arial Narrow", Arial, sans-serif;
     }
-    .success-msg p {
+    .subtitle {
       color: var(--muted);
-      font-size: 16px;
-      line-height: 1.5;
-    }
-
-    .foot {
-      margin-top: 28px;
       font-size: 15px;
+      margin-bottom: 32px;
+    }
+    .form-group {
+      margin-bottom: 28px;
+    }
+    .form-group-title {
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .lang-links {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .lang-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      padding: 16px 28px;
+      border: 2px solid var(--box);
+      border-radius: 8px;
+      background: #fff;
+      transition: all 0.2s;
+      min-width: 140px;
+    }
+    .lang-btn:hover {
+      border-color: var(--gold);
+      background: #faf6ef;
+      transform: translateY(-2px);
+    }
+    .lang-btn .flag {
+      font-size: 32px;
+    }
+    .lang-btn .label {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .lang-btn .desc {
+      font-size: 11px;
       color: var(--muted);
-      line-height: 1.5;
+    }
+    .divider {
+      border: none;
+      border-top: 1px solid var(--box);
+      margin: 28px 0;
     }
   </style>
 </head>
 <body>
-  <div class="sheet">
-    <div class="top">
-      <img class="logo-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/Z9UtrrCvJc8ObhTIILLF/media/697504ceeb392b3e880ee4d4.png" alt="Airway Clinic logotyp">
+  <div class="picker">
+    <img class="logo-img" src="https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/Z9UtrrCvJc8ObhTIILLF/media/697504ceeb392b3e880ee4d4.png" alt="Airway Clinic logo">
+
+    <h1>Airway Clinic</h1>
+    <p class="subtitle">Choose your form / Välj formulär</p>
+
+    <div class="form-group">
+      <div class="form-group-title">Craniofacial History / Kraniofacial anamnes</div>
+      <div class="lang-links">
+        <a href="anamnes-sv.html" class="lang-btn">
+          <span class="flag">🇸🇪</span>
+          <span class="label">Svenska</span>
+          <span class="desc">Kraniofacial anamnes</span>
+        </a>
+        <a href="anamnes-en.html" class="lang-btn">
+          <span class="flag">🇬🇧</span>
+          <span class="label">English</span>
+          <span class="desc">Craniofacial History</span>
+        </a>
+      </div>
     </div>
 
-    <h1>Checklista för symtom vid tungband hos vuxna:</h1>
+    <hr class="divider">
 
-    <form id="survey-form">
-      <!-- Contact info -->
-      <div class="contact-fields">
-        <div class="field">
-          <label for="fname">Förnamn *</label>
-          <input type="text" id="fname" name="firstName" required placeholder="Ditt förnamn">
-          <span class="error-msg">Ange ditt förnamn</span>
-        </div>
-        <div class="field">
-          <label for="lname">Efternamn *</label>
-          <input type="text" id="lname" name="lastName" required placeholder="Ditt efternamn">
-          <span class="error-msg">Ange ditt efternamn</span>
-        </div>
-        <div class="field">
-          <label for="email">E-postadress *</label>
-          <input type="email" id="email" name="email" required placeholder="din@email.se">
-          <span class="error-msg">Ange en giltig e-postadress</span>
-        </div>
-        <div class="field">
-          <label for="phone">Telefonnummer</label>
-          <input type="tel" id="phone" name="phone" placeholder="070-123 45 67">
-        </div>
+    <div class="form-group">
+      <div class="form-group-title">Symptom Checklist / Symtomchecklista</div>
+      <div class="lang-links">
+        <a href="checklist-sv.html" class="lang-btn">
+          <span class="flag">🇸🇪</span>
+          <span class="label">Svenska</span>
+          <span class="desc">Symtomchecklista – Tungband</span>
+        </a>
+        <a href="checklist-en.html" class="lang-btn">
+          <span class="flag">🇬🇧</span>
+          <span class="label">English</span>
+          <span class="desc">Symptom Checklist – Tongue Tie</span>
+        </a>
       </div>
-
-      <div class="checklist-label">Markera de symtom som stämmer överens med din upplevelse:</div>
-
-      <ul id="symptoms">
-        <li><input type="checkbox" name="s1" id="s1"><span class="txt">Jag känner mig orolig eller "på helspänn" i kroppen, även när livet är lugnt</span></li>
-        <li><input type="checkbox" name="s2" id="s2"><span class="txt">Jag är trött men samtidigt uppvarvad, eller kroniskt utmattad</span></li>
-        <li><input type="checkbox" name="s3" id="s3"><span class="txt">Jag har svårt att verkligen slappna av</span></li>
-        <li><input type="checkbox" name="s4" id="s4"><span class="txt">Jag snarkar</span></li>
-        <li><input type="checkbox" name="s5" id="s5"><span class="txt">Jag vaknar utan att känna mig utvilad trots tillräckligt med sömn</span></li>
-        <li><input type="checkbox" name="s6" id="s6"><span class="txt">Jag har fått höra att jag har UARS eller sömnapné (eller misstänker det)</span></li>
-        <li><input type="checkbox" name="s7" id="s7"><span class="txt">Jag biter ihop eller gnisslar tänder</span></li>
-        <li><input type="checkbox" name="s8" id="s8"><span class="txt">Jag har käksmärta, klickljud eller symtom från TMJ</span></li>
-        <li><input type="checkbox" name="s9" id="s9"><span class="txt">Jag får ofta huvudvärk eller spänningar i ansiktet</span></li>
-        <li><input type="checkbox" name="s10" id="s10"><span class="txt">Jag har kronisk stelhet i nacke eller axlar</span></li>
-        <li><input type="checkbox" name="s11" id="s11"><span class="txt">Jag märker framåtlutad huvudhållning eller belastning i överkroppen</span></li>
-        <li><input type="checkbox" name="s12" id="s12"><span class="txt">Min tunga har svårt att vila bekvämt mot gommen</span></li>
-        <li><input type="checkbox" name="s13" id="s13"><span class="txt">Jag har haft trångställning av tänder, eller återfall efter tandreglering</span></li>
-        <li><input type="checkbox" name="s14" id="s14"><span class="txt">Långvarig munandning</span></li>
-      </ul>
-
-      <div class="counter">Du har markerat <strong id="count">0</strong> av 14 symtom</div>
-
-      <div class="submit-section">
-        <button type="submit" class="submit-btn" id="submitBtn">Skicka checklista</button>
-        <div class="submit-error" id="submitError">Något gick fel. Försök igen.</div>
-      </div>
-    </form>
-
-    <!-- Success -->
-    <div class="success-msg" id="success">
-      <div class="check">✓</div>
-      <h2>Tack för din checklista!</h2>
-      <p>Vi har tagit emot dina svar och kommer att kontakta dig inom kort.</p>
     </div>
 
-    <p class="foot">Detta är ingen diagnos. Det är ett screeningverktyg för att hjälpa till att avgöra om tungband någonsin har övervägts.</p>
+    <hr class="divider">
+
+    <div class="form-group">
+      <div class="form-group-title">TMJ / Käkledsfrageformulär</div>
+      <div class="lang-links">
+        <a href="tmj-sv.html" class="lang-btn">
+          <span class="flag">🇸🇪</span>
+          <span class="label">Svenska</span>
+          <span class="desc">Käkledsfrageformulär</span>
+        </a>
+        <a href="tmj-en.html" class="lang-btn">
+          <span class="flag">🇬🇧</span>
+          <span class="label">English</span>
+          <span class="desc">TMJ Questionnaire</span>
+        </a>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="form-group">
+      <div class="form-group-title">Orthodontics – Children / Ortodonti – Barn</div>
+      <div class="lang-links">
+        <a href="ortho-children-sv.html" class="lang-btn">
+          <span class="flag">🇸🇪</span>
+          <span class="label">Svenska</span>
+          <span class="desc">Ortodonti – Barn (0–12 år)</span>
+        </a>
+        <a href="ortho-children-en.html" class="lang-btn">
+          <span class="flag">🇬🇧</span>
+          <span class="label">English</span>
+          <span class="desc">Orthodontics – Children (0–12)</span>
+        </a>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="form-group">
+      <div class="form-group-title">Orthodontics – Adults / Ortodonti – Vuxna</div>
+      <div class="lang-links">
+        <a href="ortho-adults-sv.html" class="lang-btn">
+          <span class="flag">🇸🇪</span>
+          <span class="label">Svenska</span>
+          <span class="desc">Ortodonti – Vuxna</span>
+        </a>
+        <a href="ortho-adults-en.html" class="lang-btn">
+          <span class="flag">🇬🇧</span>
+          <span class="label">English</span>
+          <span class="desc">Orthodontics – Adults</span>
+        </a>
+      </div>
+    </div>
   </div>
-
-  <script>
-    // Counter
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    const countEl = document.getElementById('count');
-    checkboxes.forEach(cb => {
-      cb.addEventListener('change', () => {
-        countEl.textContent = document.querySelectorAll('input[type="checkbox"]:checked').length;
-      });
-    });
-
-    // Click label to toggle checkbox
-    document.querySelectorAll('li').forEach(li => {
-      li.addEventListener('click', (e) => {
-        if (e.target.tagName !== 'INPUT') {
-          const cb = li.querySelector('input[type="checkbox"]');
-          cb.checked = !cb.checked;
-          cb.dispatchEvent(new Event('change'));
-        }
-      });
-    });
-
-    // Form submission
-    const form = document.getElementById('survey-form');
-    const requiredFields = form.querySelectorAll('input[required]');
-    const submitBtn = document.getElementById('submitBtn');
-    const submitError = document.getElementById('submitError');
-
-    function validateField(input) {
-      const errMsg = input.parentElement.querySelector('.error-msg');
-      if (!input.value.trim() || (input.type === 'email' && !input.value.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/))) {
-        input.classList.add('error');
-        if (errMsg) errMsg.style.display = 'block';
-        return false;
-      }
-      input.classList.remove('error');
-      if (errMsg) errMsg.style.display = 'none';
-      return true;
-    }
-
-    requiredFields.forEach(f => {
-      f.addEventListener('input', () => validateField(f));
-      f.addEventListener('blur', () => validateField(f));
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      let valid = true;
-      requiredFields.forEach(f => {
-        if (!validateField(f)) valid = false;
-      });
-      if (!valid) return;
-
-      // Collect symptoms
-      const symptoms = [];
-      checkboxes.forEach(cb => {
-        if (cb.checked) {
-          symptoms.push(cb.parentElement.querySelector('.txt').textContent);
-        }
-      });
-
-      const firstName = document.getElementById('fname').value.trim();
-      const lastName = document.getElementById('lname').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-
-      // Loading state
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Skickar...';
-      submitError.style.display = 'none';
-
-      try {
-        const contactRes = await fetch('https://airway-clinic-survey.netlify.app/.netlify/functions/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            phone: phone || '',
-            symptoms: symptoms
-          })
-        });
-
-        if (!contactRes.ok) {
-          const errData = await contactRes.json();
-          throw new Error(errData.error || 'Kunde inte skapa kontakt');
-        }
-
-        const result = await contactRes.json();
-
-        // Show success
-        form.style.display = 'none';
-        document.getElementById('success').style.display = 'block';
-
-      } catch (err) {
-        console.error('Submission error:', err);
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Skicka checklista';
-        submitError.textContent = 'Något gick fel: ' + (err.message || 'Okänt fel');
-        submitError.style.display = 'block';
-      }
-    });
-  </script>
 </body>
 </html>
